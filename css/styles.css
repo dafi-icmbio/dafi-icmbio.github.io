@@ -1,0 +1,146 @@
+body {
+    font-family: "Inter", serif;
+    margin: 0; /* Remove default margin */
+    padding-top: 60px; /* Add padding equal to the height of the fixed header */
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+body.fade-in {
+    opacity: 1;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+    height: 60px;
+}
+
+#first-header-column {
+    flex-grow: 1;
+    display: flex;
+    align-items: center; 
+    justify-content: flex-start; 
+}
+
+#second-header-column {     
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+}
+
+h1 {
+    font-size:medium;
+}
+
+h2 {
+    font-size:small;
+}
+
+#note {
+    display: block; /* Ensures the element respects block-level styling */
+    border-radius: 10px; /* Rounds the corners */
+    padding: 20px; /* Adds space between the text and the border */
+    background-color: #ecebeb; /* Optional: Adds a background color */
+    margin: 20px; /* Adds space outside the element */
+
+}
+
+#calculator {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: flex-start;
+    margin: 20px;
+
+}
+
+.main {
+    padding-top: 2%;
+    
+}
+
+form {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+form label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+}
+
+form input {
+    font-size: 16px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+    color: #333;
+}
+
+form input:focus {
+    border-color: rgb(0, 85, 30); /* Subtle highlight on focus */
+}
+
+form button {
+    font-size: 16px;
+    padding: 14px;
+    background-color: rgb(0, 85, 30);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+form button:hover {
+    background-color: rgb(60,135,80); /* Darker shade on hover */
+}
+
+form button:disabled {
+    background-color: #b0b0b0; /* Disabled state */
+    cursor: not-allowed;
+}
+
+/* Input focus and hover effects */
+form input:focus, form button:focus {
+    outline: none;
+}
+
+/* Placeholder styling for input fields */
+input::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    form {
+        padding: 16px;
+    }
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICMBio - Dafi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=calculate" />
+    <link rel="stylesheet" href="./css/styles.css">
+
+</head>
+<body>
+    <div class="header">
+        <div id="first-header-column">
+            <span class="material-symbols-outlined">calculate</span>
+            <span id="header-text"><p>Calculadora Dafi</p></span>
+        </div>
+        <div id="second-header-column">
+            <img src="./assets/images/logo_icmbio.png" alt="Logomarca ICMBio" width="125">
+            <img src="./assets/images/brasao.png" alt="Brasão de Armas" width="125">
+        </div>
+    </div>
+    <div class="main">
+        <span id="note">
+            <h1>Instituto Chico Mendes de Conservação da Biodiversidade - ICMBio</h1>
+            <h2>Divisão de Apoio à Fiscalização das Delegações</h2>
+        </span>
+        <span id="calculator">
+            <form>
+                <label for="originalValue">Valor GRU (R$):</label>
+                <input type="number" id="originalValue" name="originalValue" step="0.01" placeholder="ex.: 1500,00" required>
+                <label for="originalDue">Data de Vencimento:</label>
+                <input type="date" id="originalDue" name="originalDue" required>
+                <label for="paymentDate">Data de Pagamento:</label>
+                <input type="date" id="paymentDate" name="paymentDate" required>
+                <button type="submit">Calcular</button>
+            </form>
+        </span>
+        <script src="./js/script.js"></script>
+    </div>
+</body>
+</html>
