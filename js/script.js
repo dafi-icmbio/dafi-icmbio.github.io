@@ -120,7 +120,7 @@ document.addEventListener("submit", async (event) => {
 
                 let totalMonths = fullYearsDifference * 12 + monthsInDueYear + monthsInPaymentYear;
 
-                let selicRate = await getSelic(parsedDayOriginalDue);
+                let selicRate = await getSelic(parsedOriginalDue);
 
                 if (selicRate === null) {
                     console.error("Failed to retrieve SELIC rate.");
