@@ -62,10 +62,19 @@ document.addEventListener("submit", async (event) => {
             // Calculate late days using the getDaysBetweenDates function
             let lateDays = 0;
 
-            if (nextWorkingDayOriginalDue.getTime() == parsedPaymentDate.getTime()) {
+            if (nextWorkingDayOriginalDue.getTime() == parsedPaymentDate.getTime() 
+                && (await isWorkingDay(parsedOriginalDue))) {
+                console.log("case 1")
+                console.log(`parsedOriginalDue: ${parsedOriginalDue}`)
+                console.log(`nextWorkingDayOriginalDue: ${nextWorkingDayOriginalDue}`)
+                console.log(`parsedPaymentDate: ${parsedPaymentDate}`)
                 lateDays = 1
             } else {
+                console.log("case 2")
                 lateDays = getDaysBetweenDates(parsedPaymentDate, nextWorkingDayOriginalDue)
+                console.log(`parsedOriginalDue: ${parsedOriginalDue}`)
+                console.log(`nextWorkingDayOriginalDue: ${nextWorkingDayOriginalDue}`)
+                console.log(`parsedPaymentDate: ${parsedPaymentDate}`)
             };
             
             let fine = 0;
@@ -267,12 +276,7 @@ function getDaysBetweenDates(end, start) {
     const diffInMilliseconds = parsedEnd.getTime() - parsedStart.getTime();
 
     // Convert milliseconds to days
-    const diffInDays = (diffInMilliseconds / (1000 * 60 * 60 * 24)) + 1;
-
-    // If the difference is negative (end < start), set it to 1 day of late
-    if (diffInDays < 0) {
-        return 1;
-    }
+    const diffInDays = (diffInMilliseconds / (1000 * 60 * 60 * 24));
 
     // Return the maximum between 0 and the number of days
     return Math.max(0, Math.floor(diffInDays));
