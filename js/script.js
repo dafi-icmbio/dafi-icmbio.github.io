@@ -62,13 +62,10 @@ document.addEventListener("submit", async (event) => {
             let lateDays = 0;
 
             if (nextWorkingDayOriginalDue.getTime() == parsedPaymentDate.getTime()) {
-                console.log("Equal")
                 lateDays = 1
             } else {
                 lateDays = getDaysBetweenDates(parsedPaymentDate, nextWorkingDayOriginalDue)
             };
-
-            console.log(`Late Days: ${lateDays}`);
             
             let fine = 0;
 
@@ -122,7 +119,7 @@ document.addEventListener("submit", async (event) => {
             let totalDebt = interest + fine;
 
             if (totalDebt) {
-                displayResults(originalValue, totalDebt);
+                displayResults(originalValue, totalDebt, interest, fine);
             
             } else {
                 resetContent(formattedYesterday);
@@ -138,11 +135,13 @@ document.addEventListener("submit", async (event) => {
     };
 });
 
-function displayResults(originalValue, totalDebt) {
+function displayResults(originalValue, totalDebt, interest, fine) {
     let calculator = document.getElementById("calculator");
 
     originalValue = parseFloat(originalValue);
     totalDebt = parseFloat(totalDebt);
+    interest = parseFloat(interest)
+    fine = parseFloat(fine)
 
     if (isNaN(originalValue) || isNaN(totalDebt)) {
         calculator.innerHTML = `<p>Invalid input values for calculation.</p>`;
@@ -156,6 +155,8 @@ function displayResults(originalValue, totalDebt) {
         <span id="results">
             <p>O total da nova GRU deve ser de <span class="resultNumber">R$ ${totalAmount}</span></p>
             <p>Variação aplicada: <span class="highlight">${variation}%</span></p>
+            <p>Multa: R$ ${fine.toFixed(2)}</p>
+            <p>Juros: R$ ${interest.toFixed(2)}</p>
             <button onclick="resetContent('${formattedYesterday}')">Limpar</button>
         </span>
         <div id="spinner" style="display: none;">
