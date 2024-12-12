@@ -75,7 +75,7 @@ document.addEventListener("submit", async (event) => {
             if (parsedPaymentDate.getFullYear() === parsedOriginalDue.getFullYear()
             && parsedPaymentDate.getMonth() > parsedOriginalDue.getMonth() && lateDays > 0) {
                 
-                const selicRate = await getSelic(parsedOriginalDue);
+                const selicRate = await getSelic(nextWorkingDayOriginalDue);
 
                 if (selicRate === null) {
                     console.error("Failed to retrieve SELIC rate.");
@@ -103,7 +103,7 @@ document.addEventListener("submit", async (event) => {
 
                 let totalMonths = fullYearsDifference * 12 + monthsInDueYear + monthsInPaymentYear;
 
-                let selicRate = await getSelic(parsedOriginalDue);
+                let selicRate = await getSelic(nextWorkingDayOriginalDue);
 
                 if (selicRate === null) {
                     console.error("Failed to retrieve SELIC rate.");
