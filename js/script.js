@@ -29,6 +29,7 @@ document.addEventListener("submit", async (event) => {
             parsedOriginalDue.setUTCHours(0, 0, 0, 0);
             parsedPaymentDate.setUTCHours(0, 0, 0, 0);
 
+
             // Validate parsed dates
             if (isNaN(parsedOriginalDue) || isNaN(parsedPaymentDate)) {
                 alert("Invalid date format. Please use YYYY-MM-DD.");
@@ -68,6 +69,8 @@ document.addEventListener("submit", async (event) => {
             };
             
             let fine = 0;
+
+            console.log(`Late Days: ${lateDays}`)
 
             // Calculate fine if payment is late
             if (parsedPaymentDate.getFullYear() === parsedOriginalDue.getFullYear()
@@ -192,13 +195,13 @@ function resetContent(yesterday){
 }
 
 function isWeekDay(date) {
-    let day = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    let day = date.getUTCDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
     return day >= 1 && day <= 5;
 };
 
 async function isHoliday(date) {
-    let year = date.getFullYear();
-    let holidays = await getHolidays(year);
+    
+    let holidays = await getHolidays();
 
     if (!holidays) {
         console.error("Failed to fetch holidays");
@@ -206,9 +209,11 @@ async function isHoliday(date) {
     }
 
     let dateString = date.toISOString().split("T")[0];
+    let parts = dateString.split("-");
+    dateString = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
     for (const holiday of holidays) {
-        if (holiday.date === dateString) {
+        if (holiday.Data == dateString) {
             return true;
         };
     };
@@ -225,31 +230,22 @@ async function isWorkingDay(date) {
     return !holiday; // If it's a holiday, it's not a working day
 };
 
-async function getHolidays(year, timeout = 5000) { // Default timeout: 5000ms (5 seconds)
-    const url = `https://brasilapi.com.br/api/feriados/v1/${year}`;
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    // Set up a timeout to abort the fetch request
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+async function getHolidays() {
+    const path = "./assets/archive/feriados.json";
 
     try {
-        const response = await fetch(url, { signal });
-
-        clearTimeout(timeoutId); // Clear the timeout if fetch succeeds
+        const response = await fetch(path);
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error('Network response was not ok');
         }
 
         const data = await response.json();
+
         return data;
     } catch (error) {
-        if (error.name === 'AbortError') {
-            console.error("Fetch request timed out.");
-        } else {
-            console.error("Error fetching holidays:", error);
-        }
+
+        console.error("Error fetching holidays:", error);
         return null;
     }
 };
