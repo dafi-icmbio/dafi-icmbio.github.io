@@ -303,8 +303,10 @@ function getDaysBetweenDates(end, start) {
 };
 
 async function getSelic(date) {
-    const url = "http://www.ipeadata.gov.br/api/odata4/Metadados('GM366_TJOVER366')/Valores"
+    const url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?formato=json"
     let dateString = date.toISOString().split("T")[0];
+
+    dateString = dateString.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3/$2/$1")
 
     let data = null;
 
@@ -315,17 +317,17 @@ async function getSelic(date) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        let jsonResponse = await response.json();
-        data = jsonResponse.value;
+        data = await response.json();
 
     } catch (error){
         console.error("Error fetching SELIC data:", error);
     };
 
     if (data) {
-        let result = data.find(entry => entry.VALDATA.startsWith(dateString));
+        let result = data.find(entry => entry.data.startsWith(dateString));
         console.log(dateString)
-        return result ? (result.VALVALOR ** (1/12))/100 : null;
+        console.log(`Selic: ${result.valor}`)
+        return result ? result.valor : null;
     }
 
     return null;
