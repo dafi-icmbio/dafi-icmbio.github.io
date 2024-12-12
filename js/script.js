@@ -148,15 +148,20 @@ function displayResults(originalValue, totalDebt, interest, fine) {
         return;
     }
 
-    const totalAmount = (originalValue + totalDebt).toFixed(2);
-    const variation = (totalDebt / originalValue * 100).toFixed(2); // Percentage variation
+    let totalAmount = (originalValue + totalDebt).toFixed(2);
+    let variation = (totalDebt / originalValue * 100).toFixed(2); // Percentage variation
+
+    totalAmount = formatToBrazilianNumber(totalAmount);
+    variation = formatToBrazilianNumber(variation);
+    interest = formatToBrazilianNumber(interest);
+    fine = formatToBrazilianNumber(fine);
 
     calculator.innerHTML = `
         <span id="results">
             <p>O total da nova GRU deve ser de <span class="resultNumber">R$ ${totalAmount}</span></p>
             <p>Variação aplicada: <span class="highlight">${variation}%</span></p>
-            <p>Multa: R$ ${fine.toFixed(2)}</p>
-            <p>Juros: R$ ${interest.toFixed(2)}</p>
+            <p>Multa: R$ ${fine}</p>
+            <p>Juros: R$ ${interest}</p>
             <button onclick="resetContent('${formattedYesterday}')">Limpar</button>
         </span>
         <div id="spinner" style="display: none;">
@@ -264,7 +269,6 @@ function getDaysBetweenDates(end, start) {
 
     // Get the difference in milliseconds
     const diffInMilliseconds = parsedEnd.getTime() - parsedStart.getTime();
-    console.log(`Difference in milliseconds: ${diffInMilliseconds}`);
 
     // Convert milliseconds to days
     const diffInDays = (diffInMilliseconds / (1000 * 60 * 60 * 24)) + 1;
@@ -301,10 +305,29 @@ async function getSelic(date) {
 
     if (data) {
         let result = data.find(entry => entry.data.startsWith(dateString));
-        console.log(dateString)
-        console.log(`Selic: ${result.valor}`)
         return result ? result.valor : null;
     }
 
     return null;
+};
+
+function formatToBrazilianNumber(value) {
+    if (isNaN(value)) {
+        throw new Error("Invalid number");
+    }
+
+    // Round the value to 2 decimal places
+    const roundedValue = Math.round(value * 100) / 100;
+
+    // Convert the rounded number to a string with two decimal places
+    let formattedValue = roundedValue.toFixed(2);
+
+    // Replace the decimal separator (.) with a comma (,)
+    formattedValue = formattedValue.replace(".", ",");
+
+    // Add thousand separators (.)
+    const parts = formattedValue.split(",");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    return parts.join(",");
 };
