@@ -64,22 +64,12 @@ document.addEventListener("submit", async (event) => {
 
             if (nextWorkingDayOriginalDue.getTime() == parsedPaymentDate.getTime() 
                 && (await isWorkingDay(parsedOriginalDue))) {
-                console.log("case 1")
-                console.log(`parsedOriginalDue: ${parsedOriginalDue}`)
-                console.log(`nextWorkingDayOriginalDue: ${nextWorkingDayOriginalDue}`)
-                console.log(`parsedPaymentDate: ${parsedPaymentDate}`)
                 lateDays = 1
             } else {
-                console.log("case 2")
                 lateDays = getDaysBetweenDates(parsedPaymentDate, nextWorkingDayOriginalDue)
-                console.log(`parsedOriginalDue: ${parsedOriginalDue}`)
-                console.log(`nextWorkingDayOriginalDue: ${nextWorkingDayOriginalDue}`)
-                console.log(`parsedPaymentDate: ${parsedPaymentDate}`)
             };
             
             let fine = 0;
-
-            console.log(`Late Days: ${lateDays}`)
 
             // Calculate fine if payment is late
             if (parsedPaymentDate.getFullYear() === parsedOriginalDue.getFullYear()
