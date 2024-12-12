@@ -1,29 +1,13 @@
 let totalDebt = null;
+const today = new Date();
+const yesterday = new Date(today.getTime() - 24*60*60*1000);
+const formattedYesterday = yesterday.toISOString().split('T')[0];
+
+document.getElementById("originalDue").max = formattedYesterday;
 
 document.addEventListener("DOMContentLoaded", () => {
     const body = document.body;
     body.classList.add("fade-in");
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    const originalDue = document.getElementById("originalDue");
-    const paymentDue = document.getElementById("paymentDate");
-    
-    // Get today's date (in UTC to avoid timezone issues)
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0); // Set the time to midnight UTC
-
-    // Get tomorrow's date (in UTC)
-    const tomorrow = new Date(today);
-    tomorrow.setUTCDate(today.getUTCDate() + 1); // Increment date by 1 day
-
-    // Format as YYYY-MM-DD (using toISOString)
-    const formattedOriginal = today.toISOString().split('T')[0]; 
-    const formattedPayment = tomorrow.toISOString().split('T')[0];
-
-    // Set the input's value to today's and tomorrow's date
-    originalDue.value = formattedOriginal;
-    paymentDue.value = formattedPayment;
 });
 
 
@@ -137,17 +121,11 @@ document.addEventListener("submit", async (event) => {
 
             let totalDebt = interest + fine;
 
-            console.log(`Actual Due: ${parsedOriginalDue}`);
-            console.log(`Payment: ${parsedPaymentDate}`);
-            console.log(`Late Days: ${lateDays}`);
-            console.log(`Beginning Date of Fine: ${nextWorkingDayOriginalDue}`);
-            console.log(`Total Debt: ${totalDebt}`);
-
             if (totalDebt) {
                 displayResults(originalValue, totalDebt);
             
             } else {
-                resetContent();
+                resetContent(formattedYesterday);
             };
 
         } else {
@@ -178,7 +156,7 @@ function displayResults(originalValue, totalDebt) {
         <span id="results">
             <p>O total da nova GRU deve ser de <span class="resultNumber">R$ ${totalAmount}</span></p>
             <p>Variação aplicada: <span class="highlight">${variation}%</span></p>
-            <button onclick="resetContent()">Limpar</button>
+            <button onclick="resetContent('${formattedYesterday}')">Limpar</button>
         </span>
         <div id="spinner" style="display: none;">
                 <div class="loader"></div>
@@ -186,7 +164,7 @@ function displayResults(originalValue, totalDebt) {
     `;
 }
 
-function resetContent(){
+function resetContent(yesterday){
     let calculator = document.getElementById("calculator");
 
     calculator.innerHTML = `
@@ -194,7 +172,7 @@ function resetContent(){
                 <label for="originalValue">Valor GRU (R$):</label>
                 <input type="number" id="originalValue" name="originalValue" step="0.01" placeholder="ex.: 1500,00" required>
                 <label for="originalDue">Data de Vencimento:</label>
-                <input type="date" id="originalDue" name="originalDue" required>
+                <input type="date" id="originalDue" name="originalDue" max="${yesterday}" required>
                 <label for="paymentDate">Data de Pagamento:</label>
                 <input type="date" id="paymentDate" name="paymentDate" required>
                 <button type="submit">Calcular</button>
@@ -203,6 +181,8 @@ function resetContent(){
                 <div class="loader"></div>
             </div>
     `
+
+    document.getElementById("originalDue").max = yesterday;
 }
 
 function isWeekDay(date) {
@@ -281,17 +261,12 @@ function getDaysBetweenDates(end, start) {
     parsedEnd.setUTCHours(0, 0, 0, 0);
     parsedStart.setUTCHours(0, 0, 0, 0);
 
-    // Debug: Output normalized date strings
-    console.log(`Normalized End (UTC): ${parsedEnd}`);
-    console.log(`Normalized Start (UTC): ${parsedStart}`);
-
     // Get the difference in milliseconds
     const diffInMilliseconds = parsedEnd.getTime() - parsedStart.getTime();
     console.log(`Difference in milliseconds: ${diffInMilliseconds}`);
 
     // Convert milliseconds to days
     const diffInDays = (diffInMilliseconds / (1000 * 60 * 60 * 24)) + 1;
-    console.log(`Difference in days: ${diffInDays}`);
 
     // If the difference is negative (end < start), set it to 1 day of late
     if (diffInDays < 0) {
