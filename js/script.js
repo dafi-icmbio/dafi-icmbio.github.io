@@ -71,11 +71,21 @@ document.addEventListener("submit", async (event) => {
             
             let fine = 0;
 
+            let selicRate = null;
+
             // Calculate fine if payment is late
             if (parsedPaymentDate.getFullYear() === parsedOriginalDue.getFullYear()
             && parsedPaymentDate.getMonth() > parsedOriginalDue.getMonth() && lateDays > 0) {
-                
-                const selicRate = await getSelic(nextWorkingDayOriginalDue);
+
+                try {
+                    selicRate = await getSelic(nextWorkingDayOriginalDue);
+                } catch (error) {
+                    console.error(error)
+                } finally {
+                    if (selicRate === null) {
+                        selicRate = await getSelic(parsedOriginalDue)
+                    };
+                }               
 
                 if (selicRate === null) {
                     console.error("Failed to retrieve SELIC rate.");
@@ -103,7 +113,15 @@ document.addEventListener("submit", async (event) => {
 
                 let totalMonths = fullYearsDifference * 12 + monthsInDueYear + monthsInPaymentYear;
 
-                let selicRate = await getSelic(nextWorkingDayOriginalDue);
+                try {
+                    selicRate = await getSelic(nextWorkingDayOriginalDue);
+                } catch (error) {
+                    console.error(error)
+                } finally {
+                    if (selicRate === null) {
+                        selicRate = await getSelic(parsedOriginalDue)
+                    };
+                }               
 
                 if (selicRate === null) {
                     console.error("Failed to retrieve SELIC rate.");
